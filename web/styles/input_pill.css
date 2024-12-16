@@ -16,6 +16,7 @@
         align-items: center;
         max-width: 100%;
         min-width: 0;
+        position: relative;
 
         height: var(--height-input-pill);
         /* Make sure the `height` property
@@ -109,6 +110,8 @@
 
         &.deactivated-pill {
             background-color: var(--color-background-deactivated-user-pill);
+            opacity: 0.7;
+            overflow: hidden;
 
             &:focus {
                 border-color: var(--color-focus-outline-deactivated-user-pill);
@@ -124,7 +127,22 @@
                     --color-background-exit-hover-deactivated-user-pill
                 );
             }
+
+            > img {
+                opacity: 0.5;
+            }
         }
+    }
+
+    .slashed-circle-icon {
+        position: absolute;
+        background-color: var(--color-background-deactivated-user-pill);
+        padding: 0.2em;
+        font-size: 0.7em;
+        border-radius: 10px;
+        bottom: -1px;
+        left: 1.1em;
+        opacity: 1;
     }
 
     &.not-editable {
