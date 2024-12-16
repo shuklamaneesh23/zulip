@@ -2057,3 +2057,23 @@ body:not(.hide-left-sidebar) {
 #topic-summary-modal {
     width: 45rem;
 }
+
+.popover-menu-user-avatar-container.deactivated,
+.inline_profile_picture.deactivated {
+    position: relative;
+
+    > img {
+        opacity: 0.5;
+    }
+
+    .deactivated-user-icon {
+        background-color: var(--color-background);
+        color: var(--color-user-circle-deactivated);
+        padding: 2px;
+        font-size: 0.8em;
+        position: absolute;
+        border-radius: 10px;
+        bottom: -2px;
+        right: -2px;
+    }
+}
