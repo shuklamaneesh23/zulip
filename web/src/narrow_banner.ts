@@ -124,12 +124,35 @@ export function pick_empty_narrow_banner(): NarrowBannerData {
                   },
               ),
     };
+    const combined_feed_banner = {
+        title: $t({defaultMessage: "There are no messages in your combined feed."}),
+        // Do not show public channel messages to spectators, as it's not useful for the logged-out view.
+        html: page_params.is_spectator
+            ? ""
+            : $t_html(
+                  {
+                      defaultMessage:
+                          "Would you like to <z-link>view messages in all public channels</z-link>?",
+                  },
+                  {
+                      "z-link": (content_html) =>
+                          `<a href="#narrow/channels/public">${content_html.join("")}</a>`,
+                  },
+              ),
+    };
     const default_banner_for_multiple_filters = $t({defaultMessage: "No search results."});
 
     const current_filter = narrow_state.filter();
 
-    if (current_filter === undefined || current_filter.is_in_home()) {
+    if (current_filter === undefined) {
+        // An undefined filter means that we'd either be in the inbox view or in the
+        // recent conversations view, but those view's don't use this function/module.
         return default_banner;
+    }
+
+    if (current_filter.is_in_home()) {
+        // Return the special case banner for an empty combined feed.
+        return combined_feed_banner;
     }
 
     const first_term = current_filter.terms()[0]!;
