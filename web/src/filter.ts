@@ -747,11 +747,11 @@ export class Filter {
             const operand = term.operand;
             const canonicalized_operator = Filter.canonicalize_operator(term.operator);
             if (canonicalized_operator === "is") {
-                const verb = term.negated ? "exclude " : "";
+                const verb = operand === "resolved" ? "" : term.negated ? "exclude " : "";
                 return {
                     type: "is_operator",
                     verb,
-                    operand,
+                    operand: operand === "resolved" ? "unresolved" : operand,
                 };
             }
             if (canonicalized_operator === "has") {

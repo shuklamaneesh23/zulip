@@ -1541,7 +1541,7 @@ test("describe", ({mock_template}) => {
     assert.equal(Filter.search_description_as_html(narrow), string);
 
     narrow = [{operator: "is", operand: "resolved"}];
-    string = "topics marked as resolved";
+    string = "unresolved topics";
     assert.equal(Filter.search_description_as_html(narrow), string);
 
     narrow = [{operator: "is", operand: "followed"}];
