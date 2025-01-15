@@ -75,7 +75,7 @@ export function get_active_or_idle_user_ids(): number[] {
         .map((entry) => entry[0]);
 }
 
-export function status_from_raw(raw: RawPresence): PresenceStatus {
+export function status_from_raw(raw: RawPresence, user_id: number): PresenceStatus {
     /*
         Example of `raw`:
 
@@ -133,6 +133,28 @@ export function status_from_raw(raw: RawPresence): PresenceStatus {
 
     last_active = active_timestamp ?? idle_timestamp;
 
+    /*
+        We want to show the last idle_timestamp as the last_active
+        for the user who has turned on the 'Go invisible' mode.
+        For this, we need to compare the difference between the date_joined
+        and last_active time of the user. If it's less than the offline_threshold_secs,
+        we can consider the user has gone invisible and we can show
+        the idle_timestamp as the last_active time.
+    */
+
+    const user = people.get_by_user_id(user_id);
+    if (last_active && user.date_joined) {
+        const dateJoined = new Date(user.date_joined).getTime() / 1000;
+
+        if (dateJoined - last_active < offline_threshold_secs) {
+            last_active = idle_timestamp;
+            return {
+                status: "offline",
+                last_active,
+            };
+        }
+    }
+
     return {
         status: "offline",
         last_active,
@@ -182,7 +204,7 @@ export function update_info_from_event(
 
     raw_info.set(user_id, raw);
 
-    const status = status_from_raw(raw);
+    const status = status_from_raw(raw, user_id);
     presence_info.set(user_id, status);
 }
 
@@ -249,7 +271,7 @@ export function set_info(
 
         raw_info.set(user_id, raw);
 
-        const status = status_from_raw(raw);
+        const status = status_from_raw(raw, user_id);
         presence_info.set(user_id, status);
     }
     for (const user_id of all_active_or_idle_user_ids) {

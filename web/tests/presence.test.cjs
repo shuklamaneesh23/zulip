@@ -113,7 +113,7 @@ test("status_from_raw", () => {
         active_timestamp: now - OFFLINE_THRESHOLD_SECS / 2,
     };
 
-    assert.deepEqual(status_from_raw(raw), {
+    assert.deepEqual(status_from_raw(raw, alice.user_id), {
         status: "active",
         last_active: raw.active_timestamp,
     });
@@ -123,7 +123,7 @@ test("status_from_raw", () => {
         active_timestamp: now - OFFLINE_THRESHOLD_SECS * 2,
     };
 
-    assert.deepEqual(status_from_raw(raw), {
+    assert.deepEqual(status_from_raw(raw, alice.user_id), {
         status: "offline",
         last_active: raw.active_timestamp,
     });
@@ -133,8 +133,21 @@ test("status_from_raw", () => {
         idle_timestamp: now - OFFLINE_THRESHOLD_SECS / 2,
     };
 
-    assert.deepEqual(status_from_raw(raw), {
+    assert.deepEqual(status_from_raw(raw, alice.user_id), {
         status: "idle",
+        last_active: raw.idle_timestamp,
+    });
+
+    const user = people.get_by_user_id(alice.user_id);
+    user.date_joined = new Date((now - OFFLINE_THRESHOLD_SECS * 200) * 1000);
+
+    raw = {
+        server_timestamp: now,
+        active_timestamp: now - OFFLINE_THRESHOLD_SECS * 200,
+        idle_timestamp: now - OFFLINE_THRESHOLD_SECS * 100,
+    };
+    assert.deepEqual(status_from_raw(raw, alice.user_id), {
+        status: "offline",
         last_active: raw.idle_timestamp,
     });
 });
