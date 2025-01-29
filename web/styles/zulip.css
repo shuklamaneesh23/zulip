@@ -488,6 +488,7 @@ body.has-overlay-scrollbar {
 .app-main {
     height: 100%;
     min-height: 100%;
+    container: app-main / size;
 
     .column-left .left-sidebar,
     .column-right .right-sidebar {
