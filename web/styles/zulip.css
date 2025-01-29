@@ -1604,7 +1604,8 @@ body:not(.hide-left-sidebar) {
     }
 }
 
-@media (width < $xl_min) {
+/* 1200 at 16px/1em */
+@container app-main (width < $cq_xl_min) {
     .default-sidebar-behaviour {
         @extend %hide-right-sidebar;
 
@@ -1648,7 +1649,8 @@ body:not(.hide-left-sidebar) {
     }
 }
 
-@media (width < $md_min) {
+/* 768px at 16px/1em */
+@container app-main (width < $cq_md_min) {
     .default-sidebar-behaviour {
         @extend %hide-left-sidebar;
 
@@ -1753,7 +1755,8 @@ body:not(.hide-left-sidebar) {
     }
 }
 
-@media (width < $mm_min) {
+/* 375px at 16px/1em */
+@container app-main (width < $cq_mm_min) {
     html {
         overflow-x: hidden;
     }
