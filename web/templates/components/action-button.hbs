@@ -1,6 +1,6 @@
-<button {{#if id}}id="{{id}}"{{/if}} class="{{#if custom_classes}}{{custom_classes}} {{/if}}action-button action-button-{{type}}-{{intent}} {{#if hidden}}hide{{/if}}" tabindex="0">
+<button {{#if id}}id="{{id}}"{{/if}} class="{{#if custom_classes}}{{custom_classes}} {{/if}}action-button action-button-{{type}}-{{intent}} {{#if hidden}}hide{{/if}}" tabindex="0"  {{#if disabled}}disabled{{/if}}>
     {{#if icon}}
-    <i class="zulip-icon zulip-icon-{{icon}}"></i>
+    <i class="zulip-icon zulip-icon-{{icon}}" {{#if aria-hidden}}aria-hidden="{{aria-hidden}}"{{/if}}></i>
     {{/if}}
     <span class="action-button-label">{{label}}</span>
 </button>

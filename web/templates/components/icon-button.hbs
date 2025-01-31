@@ -1,3 +1,6 @@
-<button class="{{#if custom_classes}}{{custom_classes}} {{/if}}icon-button icon-button-{{intent}}" tabindex="0">
-    <i class="zulip-icon zulip-icon-{{icon}}"></i>
+<button {{#if id}}id="{{id}}"{{/if}} class="{{#if custom_classes}}{{custom_classes}} {{/if}}icon-button icon-button-{{intent}} {{#if hidden}}hide{{/if}}" tabindex="0"
+  {{#if data-tippy-content}}data-tippy-content="{{data-tippy-content}}"{{/if}}
+  {{#if aria-label}}aria-label="{{aria-label}}"{{/if}}
+  >
+    <i class="zulip-icon zulip-icon-{{icon}}" {{#if aria-hidden}}aria-hidden="{{aria-hidden}}"{{/if}}></i>
 </button>
