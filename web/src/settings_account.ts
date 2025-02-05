@@ -199,7 +199,8 @@ export function update_send_read_receipts_tooltip(): void {
 }
 
 function settings_change_error(message_html: string, xhr?: JQuery.jqXHR): void {
-    ui_report.error(message_html, xhr, $("#account-settings-status").expectOne());
+    ui_report.error(message_html, xhr, $("#dialog_error"));
+    dialog_widget.hide_dialog_spinner();
 }
 
 function update_custom_profile_field(
