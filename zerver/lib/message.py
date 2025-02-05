@@ -405,8 +405,9 @@ def has_message_access(
         # You can't access public stream messages in other realms
         return False
 
-    if stream.deactivated:
+    if stream.deactivated and not has_user_message:
         # You can't access messages in deactivated streams
+        # until you don't have a user_message object.
         return False
 
     def is_subscribed_helper() -> bool:
