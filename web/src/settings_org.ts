@@ -1139,10 +1139,17 @@ export let init_dropdown_widgets = (): void => {
         "channel",
     );
 
-    const default_code_language_options = (): dropdown_widget.Option[] => {
-        const options = Object.keys(pygments_data.langs).map((x) => ({
+    const combined_code_language_options = (): dropdown_widget.Option[] => {
+        // Default language options from pygments_data
+        const default_options = Object.keys(pygments_data.langs).map((x) => ({
             name: x,
             unique_id: x,
+        }));
+
+        // Custom playground language options from realm_playgrounds.
+        const playground_options = realm.realm_playgrounds.map((playground) => ({
+            name: playground.pygments_language,
+            unique_id: playground.pygments_language,
         }));
 
         const disabled_option = {
@@ -1151,12 +1158,11 @@ export let init_dropdown_widgets = (): void => {
             name: $t({defaultMessage: "No language set"}),
         };
 
-        options.unshift(disabled_option);
-        return options;
+        return [disabled_option, ...playground_options, ...default_options];
     };
     set_up_dropdown_widget(
         "realm_default_code_block_language",
-        default_code_language_options,
+        combined_code_language_options,
         "language",
     );
 
