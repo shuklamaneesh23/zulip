@@ -43,6 +43,7 @@ from zerver.lib.narrow_predicate import channel_operators, channels_operators
 from zerver.lib.recipient_users import recipient_for_user_profiles
 from zerver.lib.sqlalchemy_utils import get_sqlalchemy_connection
 from zerver.lib.streams import (
+    access_stream_by_id,
     can_access_stream_history_by_id,
     can_access_stream_history_by_name,
     get_public_streams_queryset,
@@ -966,6 +967,8 @@ def update_narrow_terms_containing_with_operator(
     if maybe_user_profile.is_authenticated:
         try:
             message = access_message(maybe_user_profile, message_id)
+            if message.recipient.type == Recipient.STREAM:
+                access_stream_by_id(maybe_user_profile, message.recipient.type_id)
         except JsonableError:
             can_user_access_target_message = False
     else:

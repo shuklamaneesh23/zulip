@@ -1351,6 +1351,8 @@ def check_update_message(
     It returns the number changed.
     """
     message = access_message(user_profile, message_id, lock_message=True)
+    if message.recipient.type == Recipient.STREAM:
+        access_stream_by_id(user_profile, message.recipient.type_id)
 
     # If there is a change to the content, check that it hasn't been too long
     # Allow an extra 20 seconds since we potentially allow editing 15 seconds

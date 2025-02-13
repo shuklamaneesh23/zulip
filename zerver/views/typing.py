@@ -14,7 +14,11 @@ from zerver.actions.typing import (
 from zerver.lib.exceptions import JsonableError
 from zerver.lib.message import access_message
 from zerver.lib.response import json_success
-from zerver.lib.streams import access_stream_by_id_for_message, access_stream_for_send_message
+from zerver.lib.streams import (
+    access_stream_by_id,
+    access_stream_by_id_for_message,
+    access_stream_for_send_message,
+)
 from zerver.lib.topic import maybe_rename_general_chat_to_empty_topic
 from zerver.lib.typed_endpoint import ApiParamConfig, OptionalTopic, typed_endpoint
 from zerver.models import Recipient, UserProfile
@@ -81,6 +85,8 @@ def send_message_edit_notification_backend(
     message_id: Json[int],
 ) -> HttpResponse:
     message = access_message(user_profile, message_id)
+    if message.recipient.type == Recipient.STREAM:
+        access_stream_by_id(user_profile, message.recipient.type_id)
     validate_user_can_edit_message(user_profile, message, edit_limit_buffer=0)
     recipient = message.recipient
 

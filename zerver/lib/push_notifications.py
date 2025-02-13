@@ -45,6 +45,7 @@ from zerver.lib.remote_server import (
     send_to_push_bouncer,
 )
 from zerver.lib.soft_deactivation import soft_reactivate_if_personal_notification
+from zerver.lib.streams import access_stream_by_id
 from zerver.lib.tex import change_katex_to_raw_latex
 from zerver.lib.timestamp import datetime_to_timestamp
 from zerver.lib.topic import get_topic_display_name
@@ -1302,6 +1303,9 @@ def handle_push_notification(user_profile_id: int, missed_message: dict[str, Any
             (message, user_message) = access_message_and_usermessage(
                 user_profile, missed_message["message_id"], lock_message=True
             )
+            if message.recipient.type == message.recipient.STREAM:
+                access_stream_by_id(user_profile, message.recipient.type_id)
+
         except JsonableError:
             if ArchivedMessage.objects.filter(id=missed_message["message_id"]).exists():
                 # If the cause is a race with the message being deleted,

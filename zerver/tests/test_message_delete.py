@@ -194,7 +194,7 @@ class DeleteMessageTest(ZulipTestCase):
         with (
             mock.patch("zerver.views.message_edit.do_delete_messages") as m,
             mock.patch("zerver.views.message_edit.validate_can_delete_message", return_value=None),
-            mock.patch("zerver.views.message_edit.access_message", return_value=(None, None)),
+            mock.patch("zerver.views.message_edit.access_message", return_value=None),
         ):
             m.side_effect = IntegrityError()
             result = test_delete_message_by_sender(msg_id=msg_id)

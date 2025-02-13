@@ -108,6 +108,8 @@ def check_add_reaction(
     message, user_message = access_message_and_usermessage(
         user_profile, message_id, lock_message=True
     )
+    if message.recipient.type == message.recipient.STREAM:
+        access_stream_by_id(user_profile, message.recipient.type_id)
 
     if emoji_code is None or reaction_type is None:
         emoji_data = get_emoji_data(message.realm_id, emoji_name)

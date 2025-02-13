@@ -27,7 +27,11 @@ from zerver.lib.stream_subscription import (
     get_subscribed_stream_recipient_ids_for_user,
     num_subscribers_for_stream_id,
 )
-from zerver.lib.streams import can_access_stream_history, get_web_public_streams_queryset
+from zerver.lib.streams import (
+    access_stream_by_id,
+    can_access_stream_history,
+    get_web_public_streams_queryset,
+)
 from zerver.lib.topic import (
     MESSAGE__TOPIC,
     TOPIC_NAME,
@@ -404,10 +408,6 @@ def has_message_access(
         # You can't access public stream messages in other realms
         return False
 
-    if stream.deactivated:
-        # You can't access messages in deactivated streams
-        return False
-
     def is_subscribed_helper() -> bool:
         if is_subscribed is not None:
             return is_subscribed
@@ -548,6 +548,8 @@ def bulk_access_messages(
 
     for message in messages:
         is_subscribed = message.recipient_id in subscribed_recipient_ids
+        if message.recipient.type == Recipient.STREAM:
+            access_stream_by_id(user_profile, message.recipient.type_id)
         if has_message_access(
             user_profile,
             message,

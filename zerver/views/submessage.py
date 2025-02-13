@@ -9,6 +9,7 @@ from zerver.actions.submessage import do_add_submessage, verify_submessage_sende
 from zerver.lib.exceptions import JsonableError
 from zerver.lib.message import access_message
 from zerver.lib.response import json_success
+from zerver.lib.streams import access_stream_by_id
 from zerver.lib.typed_endpoint import typed_endpoint
 from zerver.lib.validator import validate_poll_data, validate_todo_data
 from zerver.lib.widget import get_widget_type
@@ -27,6 +28,8 @@ def process_submessage(
     content: str,
 ) -> HttpResponse:
     message = access_message(user_profile, message_id, lock_message=True)
+    if message.recipient.type == message.recipient.STREAM:
+        access_stream_by_id(user_profile, message.recipient.type_id)
 
     verify_submessage_sender(
         message_id=message.id,
