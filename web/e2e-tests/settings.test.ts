@@ -128,7 +128,7 @@ async function test_webhook_bot_creation(page: Page): Promise<void> {
     await common.wait_for_micromodal_to_close(page);
 
     const bot_email = "1-bot@zulip.testserver";
-    const download_zuliprc_selector = `.download_bot_zuliprc[data-email="${CSS.escape(
+    const download_zuliprc_selector = `.hidden-zuliprc-download[data-email="${CSS.escape(
         bot_email,
     )}"]`;
     const outgoing_webhook_zuliprc_regex =
@@ -167,7 +167,7 @@ async function test_normal_bot_creation(page: Page): Promise<void> {
     await common.wait_for_micromodal_to_close(page);
 
     const bot_email = "2-bot@zulip.testserver";
-    const download_zuliprc_selector = `.download_bot_zuliprc[data-email="${CSS.escape(
+    const download_zuliprc_selector = `.hidden-zuliprc-download[data-email="${CSS.escape(
         bot_email,
     )}"]`;
 
@@ -179,10 +179,12 @@ async function test_normal_bot_creation(page: Page): Promise<void> {
 
 async function test_botserverrc(page: Page): Promise<void> {
     await page.click("#download_botserverrc");
-    await page.waitForSelector('#download_botserverrc[href^="data:application"]', {visible: true});
+    await page.waitForSelector('#hidden-botserverrc-download[href^="data:application"]', {
+        visible: true,
+    });
     const botserverrc_decoded_url = await get_decoded_url_in_selector(
         page,
-        "#download_botserverrc",
+        "#hidden-botserverrc-download",
     );
     const botserverrc_regex =
         /^data:application\/octet-stream;charset=utf-8,\[]\nemail=.+\nkey=.+\nsite=.+\ntoken=.+\n$/;
